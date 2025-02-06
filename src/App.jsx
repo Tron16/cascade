@@ -3,8 +3,8 @@ import { useNodesState, useEdgesState, addEdge } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import FlowChart from "./components/FlowChart";
 import NodeAdder from "./components/NodeAdder";
-import "./App.css";
 import MeetingPanel from "./components/MeetingPanel";
+import "./App.css";
 
 function App() {
   const initialNodes = [
@@ -59,6 +59,10 @@ function App() {
   });
   const [showNodeAdder, setShowNodeAdder] = useState(false);
 
+  // Undo/Redo stacks for nodes
+  const [pastNodes, setPastNodes] = useState([]);
+  const [futureNodes, setFutureNodes] = useState([]);
+
   const updateWeight = (nodeId, value) => {
     setWeights((prev) => ({ ...prev, [nodeId]: value }));
   };
@@ -68,7 +72,10 @@ function App() {
   };
 
   // Modified addNode to accept a label parameter.
+  // Push the current nodes onto the past stack and clear future states.
   const addNode = (label = "New Node") => {
+    setPastNodes((prev) => [...prev, nodes]);
+    setFutureNodes([]);
     const offsetY = 100; // Position the new node 100px below the current bottom node.
     const bottomNode = nodes.reduce(
       (maxNode, node) =>
@@ -88,8 +95,11 @@ function App() {
     setNodes((nds) => [...nds, newNode]);
   };
 
+  // Modified removeSelectedNode to push current nodes onto the past stack and clear future states.
   const removeSelectedNode = () => {
     if (!selectedNodes || selectedNodes.length === 0) return;
+    setPastNodes((prev) => [...prev, nodes]);
+    setFutureNodes([]);
     const selectedIds = selectedNodes.map((node) => node.id);
     setNodes((nds) => nds.filter((node) => !selectedIds.includes(node.id)));
   };
@@ -119,6 +129,35 @@ function App() {
   };
 
   const onConnect = (params) => setEdges((eds) => addEdge(params, eds));
+
+  // Global Undo/Redo handling
+  useEffect(() => {
+    const handleUndoRedo = (event) => {
+      const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+      const ctrlKey = isMac ? event.metaKey : event.ctrlKey;
+      if (ctrlKey && event.key.toLowerCase() === "z") {
+        // Redo if Shift is pressed; otherwise, Undo.
+        if (event.shiftKey) {
+          if (futureNodes.length > 0) {
+            const lastFuture = futureNodes[futureNodes.length - 1];
+            setFutureNodes((prev) => prev.slice(0, prev.length - 1));
+            setPastNodes((prev) => [...prev, nodes]);
+            setNodes(lastFuture);
+          }
+        } else {
+          if (pastNodes.length > 0) {
+            const lastPast = pastNodes[pastNodes.length - 1];
+            setPastNodes((prev) => prev.slice(0, prev.length - 1));
+            setFutureNodes((prev) => [...prev, nodes]);
+            setNodes(lastPast);
+          }
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleUndoRedo);
+    return () => window.removeEventListener("keydown", handleUndoRedo);
+  }, [pastNodes, futureNodes, nodes]);
 
   return (
     <div className="app-container">
