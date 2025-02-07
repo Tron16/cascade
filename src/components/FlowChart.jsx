@@ -11,13 +11,6 @@ const FlowChart = ({
   onSelectionChange,
   onConnect,
 }) => {
-  const [minimapKey, setMinimapKey] = useState(0);
-
-  // Update the minimap key whenever nodes change to force re-rendering
-  useEffect(() => {
-    setMinimapKey((prevKey) => prevKey + 1);
-  }, [nodes]);
-
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <ReactFlow
