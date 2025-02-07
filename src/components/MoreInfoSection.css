@@ -1,0 +1,25 @@
+.more-info-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.more-info-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.more-info-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.more-info-text {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}

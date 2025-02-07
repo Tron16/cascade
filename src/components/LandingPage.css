@@ -133,3 +133,8 @@
     opacity: 1;
   }
 }
+
+.empty-space {
+  height: 100vh; /* This creates one full viewport height of empty space */
+  background-color: #f0f0f0; /* Optional: a subtle background color to differentiate the area */
+}

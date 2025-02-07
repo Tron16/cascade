@@ -5,6 +5,7 @@ import FlowChart from "./FlowChart";
 import NodeAdder from "./NodeAdder";
 import MeetingPanel from "./MeetingPanel";
 import "./Workspace.css";
+import { animate } from "framer-motion";
 
 function Workspace() {
   const initialNodes = [
