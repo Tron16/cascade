@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./NodeAdder.css";
 
 const NodeAdder = ({ visible, onSubmit, onCancel }) => {
