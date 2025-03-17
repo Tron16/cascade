@@ -1,16 +1,20 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LandingPage from "./components/LandingPage";
-import Workspace from "./components/Workspace";
+import React from 'react'
+import Navbar from './components/Navbar'
+import HeroSection from './components/HeroSection'
+import FeatureSection from './components/FeatureSection'
+import Workflow from './components/Workflow'
 
-function App() {
+const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/workspace" element={<Workspace />} />
-      </Routes>
-    </Router>
-  );
+    <>
+      <Navbar />
+      <div className="max-w-7xl mx-auto pt-20 px6">
+        <HeroSection />
+        <FeatureSection />
+        <Workflow />
+      </div>
+    </>
+  )
 }
 
-export default App;
+export default App
